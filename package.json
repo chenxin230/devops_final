@@ -45,5 +45,22 @@
     "ts-node": "^10.9.2",
     "tsup": "^8.0.1",
     "typescript": "^5.7.2"
-  }
+  },
+  "name": "dvops-project-dcf-cx",
+  "version": "1.0.0",
+  "description": "make sure you have docker installed.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chenxin230/devops_final.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chenxin230/devops_final/issues"
+  },
+  "homepage": "https://github.com/chenxin230/devops_final#readme"
 }
