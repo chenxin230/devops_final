@@ -1,0 +1,55 @@
+name: Test Frontend and Backend
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    env:
+      PORT: 3000
+      DEBUG: true
+      NODE_ENV: "development"
+      POSTGRES_PASSWORD: "test123"
+      POSTGRES_CONNECTION_URL: "postgresql://postgres:test123@localhost:5432/postgres"
+      JWT_SECRET: "test456"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      # Write environment variables to .env file
+      - name: Write environment variables to .env file
+        run: |
+          echo "PORT=${{ env.PORT }}" > .env
+          echo "DEBUG=${{ env.DEBUG }}" >> .env
+          echo "NODE_ENV=${{ env.NODE_ENV }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_CONNECTION_URL=${{ env.POSTGRES_CONNECTION_URL }}" >> .env
+          echo "JWT_SECRET=${{ env.JWT_SECRET }}" >> .env
+
+      # Start Docker Compose services
+      - name: Start services with Docker Compose
+        run: docker compose up -d --wait --wait-timeout 30
+
+      # Push database schema with drizzle-kit
+      - name: Setup database schema with drizzle-kit
+        run: npx drizzle-kit push
+
+      - name: Run tests
+        run: npm run test
+
+      # Stop Docker Compose services
+      - name: Stop Docker Compose services
+        run: docker compose down
